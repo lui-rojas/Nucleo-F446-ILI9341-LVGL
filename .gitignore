@@ -1,0 +1,17 @@
+#Build folders
+build/
+Debug/
+Release/
+bin/
+obj/
+
+# Compiled files
+*.elf
+*.bin
+*.hex
+*.lst
+
+# OS and VS Code trash
+.DS_Store
+.vscode/
+.history/
