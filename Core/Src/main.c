@@ -122,7 +122,7 @@ void Task_Display(void){
 
     // 4. Jetzt erst darfst du Widgets (Buttons, Labels) erstellen
     lv_obj_t * label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, "Hi Aga");
+    lv_label_set_text(label, "Good morning");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
   while(1){

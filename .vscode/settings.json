@@ -1,0 +1,4 @@
+{
+    "stm32cube-ide-bundles-manager.updateBehavior": "install-and-remove",
+    "makefile.configureOnOpen": true
+}

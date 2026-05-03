@@ -13,5 +13,5 @@ obj/
 
 # OS and VS Code trash
 .DS_Store
-.vscode/
+#.vscode/
 .history/

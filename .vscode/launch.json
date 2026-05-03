@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug STM32 (Ubuntu)",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/${workspaceFolderBasename}.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F446RE",
+            "toolchainPrefix": "arm-none-eabi",
+            "svdFile": "${workspaceRoot}/STM32F446.svd",
+            "configFiles": [
+                    "interface/stlink.cfg",
+                    "target/stm32f4x.cfg"
+                    ] 
+        },
+        {
+            "name": "Debug STM32 (Windows)",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/Nucleo-64-Light.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stlink",
+            "device": "STM32F446RE",
+            "interface": "swd",
+            "svdFile": "${workspaceRoot}/STM32F446.svd",
+            // Windows needs the specific paths to the CLT tools
+            "serverpath": "C:\\ST\\STM32CubeCLT_1.21.0\\STLink-gdb-server\\bin\\ST-LINK_gdbserver.exe",
+            "armToolchainPath": "C:\\ST\\STM32CubeCLT_1.21.0\\GNU-tools-for-STM32\\bin",
+            "stm32cubeprogrammer": "C:\\ST\\STM32CubeCLT_1.21.0\\STM32CubeProgrammer\\bin"
+        }
+    ]
+}
