@@ -2,6 +2,8 @@
 
 #include "stm32f4xx_hal.h"
 #include "ili9341_touch.h"
+#include  <string.h>
+#include <stdio.h>
 
 #define READ_X 0xD0
 #define READ_Y 0x90
@@ -25,10 +27,12 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
 
     ILI9341_TouchSelect();
 
+    uint32_t loop = 16;
+
     uint32_t avg_x = 0;
     uint32_t avg_y = 0;
     uint8_t nsamples = 0;
-    for(uint8_t i = 0; i < 16; i++) {
+    for(uint8_t i = 0; i < loop; i++) {
         if(!ILI9341_TouchPressed())
             break;
 
@@ -48,22 +52,24 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
 
     ILI9341_TouchUnselect();
 
-    if(nsamples < 16)
+    if(nsamples < loop)
         return false;
 
-    uint32_t raw_x = (avg_x / 16);
+    uint32_t raw_x = (avg_x / loop);
     if(raw_x < ILI9341_TOUCH_MIN_RAW_X) raw_x = ILI9341_TOUCH_MIN_RAW_X;
     if(raw_x > ILI9341_TOUCH_MAX_RAW_X) raw_x = ILI9341_TOUCH_MAX_RAW_X;
 
-    uint32_t raw_y = (avg_y / 16);
+    uint32_t raw_y = (avg_y / loop);
     if(raw_y < ILI9341_TOUCH_MIN_RAW_Y) raw_y = ILI9341_TOUCH_MIN_RAW_Y;
     if(raw_y > ILI9341_TOUCH_MAX_RAW_Y) raw_y = ILI9341_TOUCH_MAX_RAW_Y;
 
     // Uncomment this line to calibrate touchscreen:
-    // UART_Printf("raw_x = %d, raw_y = %d\r\n", x, y);
+    char dbg[64];
+    snprintf(dbg, sizeof(dbg), "raw_x=%lu, raw_y=%lu\r\n", avg_x/nsamples, avg_y/nsamples);
+        HAL_UART_Transmit(&huart2, (uint8_t*)dbg, strlen(dbg), 10);
 
-    *x = (raw_x - ILI9341_TOUCH_MIN_RAW_X) * ILI9341_TOUCH_SCALE_X / (ILI9341_TOUCH_MAX_RAW_X - ILI9341_TOUCH_MIN_RAW_X);
-    *y = (raw_y - ILI9341_TOUCH_MIN_RAW_Y) * ILI9341_TOUCH_SCALE_Y / (ILI9341_TOUCH_MAX_RAW_Y - ILI9341_TOUCH_MIN_RAW_Y);
+*x = ILI9341_TOUCH_SCALE_X - ((raw_y - ILI9341_TOUCH_MIN_RAW_Y) * ILI9341_TOUCH_SCALE_X / (ILI9341_TOUCH_MAX_RAW_Y - ILI9341_TOUCH_MIN_RAW_Y));
+*y = (raw_x - ILI9341_TOUCH_MIN_RAW_X) * ILI9341_TOUCH_SCALE_Y / (ILI9341_TOUCH_MAX_RAW_X - ILI9341_TOUCH_MIN_RAW_X);
 
     return true;
 }

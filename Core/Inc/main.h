@@ -84,6 +84,11 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+#define TOUCH_CS_Pin        GPIO_PIN_7
+#define TOUCH_CS_GPIO_Port  GPIOB
+#define TOUCH_IRQ_Pin       GPIO_PIN_7
+#define TOUCH_IRQ_GPIO_Port GPIOC
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

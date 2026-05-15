@@ -25,7 +25,9 @@
 #include "lvgl.h"
 #include "ili9341.h"
 #include "fonts.h"
+#include "ili9341_touch.h"
 #include <stdio.h>
+#include <string.h>
 
 
 /* USER CODE END Includes */
@@ -72,6 +74,7 @@ static lv_color_t buf[320 * 10]; // Puffer für 10 Zeilen des Displays (ca. 6.4 
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 UART_HandleTypeDef huart2;
 
@@ -99,6 +102,47 @@ void my_flush_cb(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * 
     lv_disp_flush_ready(disp_drv);
 }
 
+static void SPI1_SetSpeed(uint32_t prescaler)
+{
+    /* SPI kurz deaktivieren, Prescaler ändern, wieder aktivieren */
+    __HAL_SPI_DISABLE(&hspi1);
+    hspi1.Instance->CR1 = (hspi1.Instance->CR1 & ~SPI_CR1_BR_Msk) | prescaler;
+    __HAL_SPI_ENABLE(&hspi1);
+}
+
+void touch_lvgl_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
+{
+    (void)drv;
+    uint16_t x, y;
+
+    /* Auf ~650 Kbit/s runterschalten (Prescaler 128 → 84MHz/128 = 656 Kbit/s) */
+    SPI1_SetSpeed(SPI_CR1_BR_2 | SPI_CR1_BR_0); /* 0b111 = /256 → ~328 Kbit */
+
+    if (ILI9341_TouchGetCoordinates(&x, &y)) {
+        data->point.x = x;
+        data->point.y = y;
+        data->state   = LV_INDEV_STATE_PRESSED;
+
+    } else {
+        data->state = LV_INDEV_STATE_RELEASED;
+    }
+
+    /* Zurück auf Display-Geschwindigkeit (Prescaler 4 → 21 Mbit/s) */
+    SPI1_SetSpeed(SPI_CR1_BR_0); /* 0b001 = /4 */
+}
+
+static void btn_event_cb(lv_event_t * e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * btn = lv_event_get_target(e);
+
+    if (code == LV_EVENT_CLICKED) {
+        // Label des Buttons ändern beim Klick
+        lv_obj_t * btn_label = lv_obj_get_child(btn, 0);
+        lv_label_set_text(btn_label, "Touched!");
+    }
+}
+
 void TaskA(void);
 void TaskB(void);
 void Task_Idle(void) {
@@ -120,10 +164,26 @@ void Task_Display(void){
     
     lv_disp_drv_register(&disp_drv);        /* Den Treiber im System anmelden */
 
+    static lv_indev_drv_t indev_drv;
+    lv_indev_drv_init(&indev_drv);
+    indev_drv.type    = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = touch_lvgl_read;
+    lv_indev_drv_register(&indev_drv);
+
     // 4. Jetzt erst darfst du Widgets (Buttons, Labels) erstellen
     lv_obj_t * label = lv_label_create(lv_scr_act());
     lv_label_set_text(label, "Good morning");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+
+    lv_obj_t * btn = lv_btn_create(lv_scr_act());
+    lv_obj_set_size(btn, 120, 50);
+    lv_obj_align(btn, LV_ALIGN_CENTER, 0, 60);  // 60px unterhalb der Mitte
+
+    lv_obj_t * btn_label = lv_label_create(btn);
+    lv_label_set_text(btn_label, "Press me");
+    lv_obj_center(btn_label);
+
+    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_CLICKED, NULL);
 
   while(1){
     lv_timer_handler();
@@ -167,13 +227,13 @@ void TaskSheduler(void) {
       currentTCB = &tasks[next_task];
     } 
 }
- 
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
@@ -215,10 +275,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   ILI9341_Init(); 
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET); // Display CS inaktiv
+HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET); // Touch CS inaktiv
    
   HAL_SYSTICK_Config(SystemCoreClock / 1000);
 
@@ -372,6 +436,22 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -426,6 +506,19 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(LCD_CS_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
+  // T_CS → PB7 als Output
+  GPIO_InitStruct.Pin = TOUCH_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(TOUCH_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(TOUCH_CS_GPIO_Port, TOUCH_CS_Pin, GPIO_PIN_SET); // CS idle HIGH
+
+  // T_IRQ → PC7 als Input
+  GPIO_InitStruct.Pin = TOUCH_IRQ_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(TOUCH_IRQ_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
