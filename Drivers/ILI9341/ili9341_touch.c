@@ -64,12 +64,13 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
     if(raw_y > ILI9341_TOUCH_MAX_RAW_Y) raw_y = ILI9341_TOUCH_MAX_RAW_Y;
 
     // Uncomment this line to calibrate touchscreen:
-    char dbg[64];
-    snprintf(dbg, sizeof(dbg), "raw_x=%lu, raw_y=%lu\r\n", avg_x/nsamples, avg_y/nsamples);
-        HAL_UART_Transmit(&huart2, (uint8_t*)dbg, strlen(dbg), 10);
+    //char dbg[64];
+    //snprintf(dbg, sizeof(dbg), "raw_x=%lu, raw_y=%lu\r\n", avg_x/nsamples, avg_y/nsamples);
+    //    HAL_UART_Transmit(&huart2, (uint8_t*)dbg, strlen(dbg), 10);
 
-*x = ILI9341_TOUCH_SCALE_X - ((raw_y - ILI9341_TOUCH_MIN_RAW_Y) * ILI9341_TOUCH_SCALE_X / (ILI9341_TOUCH_MAX_RAW_Y - ILI9341_TOUCH_MIN_RAW_Y));
-*y = (raw_x - ILI9341_TOUCH_MIN_RAW_X) * ILI9341_TOUCH_SCALE_Y / (ILI9341_TOUCH_MAX_RAW_X - ILI9341_TOUCH_MIN_RAW_X);
+    // --- CORRECTED 270° ROTATION (X-Axis Mirroring Removed) ---
+    *x = (raw_y - ILI9341_TOUCH_MIN_RAW_Y) * ILI9341_TOUCH_SCALE_X / (ILI9341_TOUCH_MAX_RAW_Y - ILI9341_TOUCH_MIN_RAW_Y);
+    *y = (raw_x - ILI9341_TOUCH_MIN_RAW_X) * ILI9341_TOUCH_SCALE_Y / (ILI9341_TOUCH_MAX_RAW_X - ILI9341_TOUCH_MIN_RAW_X);
 
     return true;
 }

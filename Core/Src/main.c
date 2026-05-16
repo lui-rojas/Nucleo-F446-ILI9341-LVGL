@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "screens/screen_home.h"
+
 
 /* USER CODE END Includes */
 
@@ -131,18 +133,6 @@ void touch_lvgl_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
     SPI1_SetSpeed(SPI_CR1_BR_0); /* 0b001 = /4 */
 }
 
-static void btn_event_cb(lv_event_t * e)
-{
-    lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * btn = lv_event_get_target(e);
-
-    if (code == LV_EVENT_CLICKED) {
-        // Label des Buttons ändern beim Klick
-        lv_obj_t * btn_label = lv_obj_get_child(btn, 0);
-        lv_label_set_text(btn_label, "Touched!");
-    }
-}
-
 void TaskA(void);
 void TaskB(void);
 void Task_Idle(void) {
@@ -170,20 +160,7 @@ void Task_Display(void){
     indev_drv.read_cb = touch_lvgl_read;
     lv_indev_drv_register(&indev_drv);
 
-    // 4. Jetzt erst darfst du Widgets (Buttons, Labels) erstellen
-    lv_obj_t * label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, "Good morning");
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-
-    lv_obj_t * btn = lv_btn_create(lv_scr_act());
-    lv_obj_set_size(btn, 120, 50);
-    lv_obj_align(btn, LV_ALIGN_CENTER, 0, 60);  // 60px unterhalb der Mitte
-
-    lv_obj_t * btn_label = lv_label_create(btn);
-    lv_label_set_text(btn_label, "Press me");
-    lv_obj_center(btn_label);
-
-    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_CLICKED, NULL);
+    screen_home_init();
 
   while(1){
     lv_timer_handler();

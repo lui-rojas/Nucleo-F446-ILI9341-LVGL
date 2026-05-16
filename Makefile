@@ -41,48 +41,7 @@ Core/Src/stm32f4xx_it.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
-Core/Src/system_stm32f4xx.c
-
-C_SOURCES += \
-$(wildcard Core/lvgl-release-v8.3/src/core/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/arm2d/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/nxp/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/nxp/pxp/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/nxp/vglite/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/renesas/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/sdl/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/stm32_dma2d/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/sw/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/draw/swm341_dma2d/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/layouts/flex/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/layouts/grid/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/themes/basic/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/themes/default/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/themes/mono/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/animimg/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/calendar/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/chart/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/colorwheel/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/imgbtn/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/keyboard/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/led/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/list/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/menu/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/meter/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/msgbox/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/span/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/spinbox/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/spinner/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/tabview/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/tileview/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/extra/widgets/win/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/font/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/hal/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/misc/*.c) \
-$(wildcard Core/lvgl-release-v8.3/src/widgets/*.c) \
-$(wildcard Drivers/ILI9341/*.c) \
+Core/Src/system_stm32f4xx.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c \
@@ -98,6 +57,50 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usart.c
+
+C_SOURCES += \
+$(wildcard lvgl-release-v8.3/src/core/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/arm2d/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/nxp/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/nxp/pxp/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/nxp/vglite/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/renesas/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/sdl/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/stm32_dma2d/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/sw/*.c) \
+$(wildcard lvgl-release-v8.3/src/draw/swm341_dma2d/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/layouts/flex/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/layouts/grid/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/themes/basic/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/themes/default/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/themes/mono/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/animimg/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/calendar/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/chart/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/colorwheel/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/imgbtn/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/keyboard/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/led/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/list/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/menu/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/meter/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/msgbox/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/span/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/spinbox/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/spinner/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/tabview/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/tileview/*.c) \
+$(wildcard lvgl-release-v8.3/src/extra/widgets/win/*.c) \
+$(wildcard lvgl-release-v8.3/src/font/*.c) \
+$(wildcard lvgl-release-v8.3/src/hal/*.c) \
+$(wildcard lvgl-release-v8.3/src/misc/*.c) \
+$(wildcard lvgl-release-v8.3/src/widgets/*.c) \
+$(wildcard Drivers/ILI9341/*.c) \
+$(wildcard UI/*.c) \
+$(wildcard UI/screens/*.c) \
+$(wildcard UI/widgets/*.c)
 
 # ASM sources
 AS_SOURCES =  \
@@ -163,30 +166,31 @@ C_INCLUDES =  \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
--ICore/lvgl-release-v8.3 \
--ICore/lvgl-release-v8.3/src \
--ICore/lvgl-release-v8.3/src/core \
--ICore/lvgl-release-v8.3/src/draw \
--ICore/lvgl-release-v8.3/src/draw/arm2d \
--ICore/lvgl-release-v8.3/src/draw/nxp \
--ICore/lvgl-release-v8.3/src/draw/nxp/pxp \
--ICore/lvgl-release-v8.3/src/draw/nxp/vglite \
--ICore/lvgl-release-v8.3/src/draw/renesas \
--ICore/lvgl-release-v8.3/src/draw/sdl \
--ICore/lvgl-release-v8.3/src/draw/stm32_dma2d \
--ICore/lvgl-release-v8.3/src/draw/sw \
--ICore/lvgl-release-v8.3/src/draw/swm341_dma2d \
--ICore/lvgl-release-v8.3/src/extra \
--ICore/lvgl-release-v8.3/src/extra/layouts/flex \
--ICore/lvgl-release-v8.3/src/extra/layouts/grid \
--ICore/lvgl-release-v8.3/src/extra/themes/basic \
--ICore/lvgl-release-v8.3/src/extra/themes/default \
--ICore/lvgl-release-v8.3/src/extra/themes/mono \
--ICore/lvgl-release-v8.3/src/font \
--ICore/lvgl-release-v8.3/src/hal \
--ICore/lvgl-release-v8.3/src/misc \
--ICore/lvgl-release-v8.3/src/widgets \
--IDrivers/ILI9341/
+-IDrivers/ILI9341 \
+-Ilvgl-release-v8.3 \
+-Ilvgl-release-v8.3/src \
+-Ilvgl-release-v8.3/src/core \
+-Ilvgl-release-v8.3/src/draw \
+-Ilvgl-release-v8.3/src/draw/arm2d \
+-Ilvgl-release-v8.3/src/draw/nxp \
+-Ilvgl-release-v8.3/src/draw/nxp/pxp \
+-Ilvgl-release-v8.3/src/draw/nxp/vglite \
+-Ilvgl-release-v8.3/src/draw/renesas \
+-Ilvgl-release-v8.3/src/draw/sdl \
+-Ilvgl-release-v8.3/src/draw/stm32_dma2d \
+-Ilvgl-release-v8.3/src/draw/sw \
+-Ilvgl-release-v8.3/src/draw/swm341_dma2d \
+-Ilvgl-release-v8.3/src/extra \
+-Ilvgl-release-v8.3/src/extra/layouts/flex \
+-Ilvgl-release-v8.3/src/extra/layouts/grid \
+-Ilvgl-release-v8.3/src/extra/themes/basic \
+-Ilvgl-release-v8.3/src/extra/themes/default \
+-Ilvgl-release-v8.3/src/extra/themes/mono \
+-Ilvgl-release-v8.3/src/font \
+-Ilvgl-release-v8.3/src/hal \
+-Ilvgl-release-v8.3/src/misc \
+-Ilvgl-release-v8.3/src/widgets \
+-IUI
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
